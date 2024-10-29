@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+@SuppressWarnings("SpellCheckingInspection")
 @Entity
 public class Equipe implements Serializable{
     @Id
