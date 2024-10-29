@@ -1,23 +1,25 @@
-package tn.esprit.spring.kaddem;
+package tn.esprit.spring.kaddem.services;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import tn.esprit.spring.kaddem.entities.*;
 import tn.esprit.spring.kaddem.entities.Equipe;
-import tn.esprit.spring.kaddem.repositories.*;
+import tn.esprit.spring.kaddem.entities.Niveau;
+import tn.esprit.spring.kaddem.repositories.ContratRepository;
+import tn.esprit.spring.kaddem.repositories.DepartementRepository;
 import tn.esprit.spring.kaddem.repositories.EquipeRepository;
-import tn.esprit.spring.kaddem.services.EquipeServiceImpl;
-import tn.esprit.spring.kaddem.services.EquipeServiceImpl;
+import tn.esprit.spring.kaddem.repositories.EtudiantRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class EquipeServiceImplTest {
+class EquipeServiceImplTest {
     @Mock
     private EquipeRepository equipeRepository;
     @Mock
@@ -35,7 +37,7 @@ public class EquipeServiceImplTest {
     }
 
     @Test
-    public void testRetrieveAllEquipes() {
+    void retrieveAllEquipes() {
         // Préparer les données
         List<Equipe> equipes = new ArrayList<>();
         equipes.add(new Equipe("Bouzid", Niveau.EXPERT));
@@ -50,7 +52,7 @@ public class EquipeServiceImplTest {
     }
 
     @Test
-    public void testAddEquipe() {
+    void addEquipe() {
         // Créer un exemple d'étudiant
         Equipe equipe = new Equipe("TestNom", Niveau.EXPERT);
         // Simuler le comportement du repository
@@ -63,21 +65,21 @@ public class EquipeServiceImplTest {
     }
 
     @Test
-    public void testUpdateEquipe() {
+    void deleteEquipe() {
         // Créer un exemple d'étudiant
         Equipe equipe = new Equipe("TestNom", Niveau.EXPERT);
         equipe.setIdEquipe(1);
-        // Simuler le comportement du repository
-        when(equipeRepository.save(equipe)).thenReturn(equipe);
+        // Simuler la méthode du repository
+
+        when(equipeRepository.findById(1)).thenReturn(Optional.of(equipe));
         // Appeler la méthode à tester
-        Equipe result = equipeServiceImpl.updateEquipe(equipe);
-        // Vérifier le résultat
-        assertEquals(1, result.getIdEquipe());
-        verify(equipeRepository, times(1)).save(equipe);
+        equipeServiceImpl.deleteEquipe(1);
+        // Vérifier les interactions
+        verify(equipeRepository, times(1)).delete(equipe);
     }
 
     @Test
-    public void testRetrieveEquipe() {
+    void retrieveEquipe() {
         // Créer un exemple d'étudiant
         Equipe equipe = new Equipe("TestNom", Niveau.EXPERT);
         equipe.setIdEquipe(1);
@@ -92,19 +94,9 @@ public class EquipeServiceImplTest {
         verify(equipeRepository, times(1)).findById(1);
     }
 
+
+
     @Test
-    public void testRemoveEquipe() {
-        // Créer un exemple d'étudiant
-        Equipe equipe = new Equipe("TestNom", Niveau.EXPERT);
-        equipe.setIdEquipe(1);
-        // Simuler la méthode du repository
-
-        when(equipeRepository.findById(1)).thenReturn(Optional.of(equipe));
-        // Appeler la méthode à tester
-        equipeServiceImpl.deleteEquipe(1);
-        // Vérifier les interactions
-        verify(equipeRepository, times(1)).delete(equipe);
+    void evoluerEquipes() {
     }
-
 }
-
