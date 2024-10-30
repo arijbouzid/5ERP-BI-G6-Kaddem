@@ -1,4 +1,11 @@
-FROM openjdk:17-jdk-alpine
-EXPOSE 8089
-ADD target/tp-foyer-5.0.0.jar tp-foyer-5.0.0.jar
-ENTRYPOINT ["java","-jar","/kaddem-5.0.0.jar"]
+FROM openjdk:17-jdk-slim
+
+EXPOSE 8080
+
+ENV APP_HOME /usr/src/app
+
+COPY target/*.jar $APP_HOME/app.jar
+
+WORKDIR $APP_HOME
+
+CMD ["java", "-jar", "app.jar"]
