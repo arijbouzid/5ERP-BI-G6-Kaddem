@@ -97,11 +97,11 @@
           <distributionManagement>
         <repository>
             <id>deploymentRepo</id>
-            <url>http://127.0.0.1:8081/#browse/browse:maven-releases</url>
+            <url>http://127.0.0.1:8081/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>snapshotRepo</id>
-            <url>http://127.0.0.1:8081/#browse/browse:maven-snapshots</url>
+            <url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
