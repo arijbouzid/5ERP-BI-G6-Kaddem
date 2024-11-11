@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  spring_app:
+    image: abidiahlem/ahlemabidi_g6_kaddem:latest
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 0000  # Make sure to set this or leave it empty as needed
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5Dialect
+      SERVER_SERVLET_CONTEXT_PATH: /kaddem
+      SERVER_PORT: 8089
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: always
+    ports:
+      - "8089:8089"  # Match the server port defined in application.properties (8089)
+    networks:
+      - app_network
+    depends_on:
+      - mysql
+networks:
+  app_network:
+    driver: bridge
+    external: true
