@@ -19,8 +19,7 @@ services:
       - "8089:8089"  # Match the server port defined in application.properties (8089)
     networks:
       - app_network
-    depends_on:
-      - mysql  # Ensure MySQL is available first
+   
 
 networks:
   app_network:
