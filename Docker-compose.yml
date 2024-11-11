@@ -1,4 +1,19 @@
 services:
+  mysql:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "0000"
+      MYSQL_DATABASE: "kaddem_db"  # Matching the database name with application.properties
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "0000"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
   sonarqube:
     image: sonarqube:8.9.7-community
     restart: unless-stopped
@@ -29,7 +44,7 @@ networks:
     external: true
 
 volumes:
-  mysql_data:            # Defined mysql_data volume
+  mysql_data:
   sonarqube_data:
   sonarqube_extensions:
   sonarqube_logs:
