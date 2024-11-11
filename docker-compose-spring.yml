@@ -5,9 +5,9 @@ services:
     image: abidiahlem/ahlemabidi_g6_kaddem:latest
     restart: unless-stopped
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kaddem_db?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqll:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 0000
+      SPRING_DATASOURCE_PASSWORD: 0000  # Make sure to set this or leave it empty as needed
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5Dialect
@@ -19,8 +19,26 @@ services:
       - "8089:8089"  # Match the server port defined in application.properties (8089)
     networks:
       - app_network
-   
+    depends_on:
+      - mysqll
+
+  mysqll:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 0000
+      MYSQL_DATABASE: kaddem
+    ports:
+      - "3306:3306"
+    networks:
+      - app_network
+    volumes:
+      - mysqll_data:/var/lib/mysql
 
 networks:
   app_network:
-    external: true  # Reuse the external network defined in the other compose file
+    driver: bridge
+    external: true
+
+volumes:
+  mysqll_data:
+    driver: local
