@@ -1,28 +1,32 @@
-package tn.esprit.tpfoyer;
+package tn.esprit.spring.kaddem.services;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import tn.esprit.tpfoyer.entity.Bloc;
-import tn.esprit.tpfoyer.repository.BlocRepository;
-import tn.esprit.tpfoyer.service.BlocServiceImpl;
+import tn.esprit.spring.kaddem.entities.Contrat;
+import tn.esprit.spring.kaddem.entities.Etudiant;
+import tn.esprit.spring.kaddem.repositories.ContratRepository;
+import tn.esprit.spring.kaddem.repositories.EtudiantRepository;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class BlocServiceImplTest {
+class ContratServiceImplTest {
 
     @Mock
-    private BlocRepository blocRepository;
+    private ContratRepository contratRepository;
+
+    @Mock
+    private EtudiantRepository etudiantRepository;
 
     @InjectMocks
-    private BlocServiceImpl blocService;
+    private ContratServiceImpl contratService;
 
     @BeforeEach
     void setUp() {
@@ -30,55 +34,73 @@ class BlocServiceImplTest {
     }
 
     @Test
-    void testRetrieveAllBlocs() {
-        List<Bloc> blocs = new ArrayList<>();
-        blocs.add(new Bloc(1L, "Bloc A", 1000L, null, new HashSet<>()));
-        blocs.add(new Bloc(2L, "Bloc B", 1200L, null, new HashSet<>()));
+    void testRetrieveAllContrats() {
+        List<Contrat> contrats = new ArrayList<>();
+        contrats.add(new Contrat(1, "Contrat A", new Etudiant(), null, null));
+        contrats.add(new Contrat(2, "Contrat B", new Etudiant(), null, null));
 
-        when(blocRepository.findAll()).thenReturn(blocs);
+        when(contratRepository.findAll()).thenReturn(contrats);
 
-        List<Bloc> result = blocService.retrieveAllBlocs();
+        List<Contrat> result = contratService.retrieveAllContrats();
 
         assertEquals(2, result.size());
-        verify(blocRepository, times(1)).findAll();
+        verify(contratRepository, times(1)).findAll();
     }
 
     @Test
-    void testAddBloc() {
-        Bloc bloc = new Bloc(1L, "Bloc A", 1000L, null, new HashSet<>());
-        when(blocRepository.save(bloc)).thenReturn(bloc);
+    void testAddContrat() {
+        Contrat contrat = new Contrat(1, "Contrat A", new Etudiant(), null, null);
+        when(contratRepository.save(contrat)).thenReturn(contrat);
 
-        Bloc result = blocService.addBloc(bloc);
+        Contrat result = contratService.addContrat(contrat);
 
         assertNotNull(result);
-        assertEquals("Bloc A", result.getNomBloc());
-        verify(blocRepository, times(1)).save(bloc);
+        assertEquals("Contrat A", result.getNomContrat());
+        verify(contratRepository, times(1)).save(contrat);
     }
 
     @Test
-    void testRemoveBloc() {
-        Long blocId = 1L;
+    void testRetrieveContrat() {
+        Integer contratId = 1;
+        Contrat contrat = new Contrat(contratId, "Contrat A", new Etudiant(), null, null);
 
-        doNothing().when(blocRepository).deleteById(blocId);
+        when(contratRepository.findById(contratId)).thenReturn(Optional.of(contrat));
 
-        blocService.removeBloc(blocId);
-
-        verify(blocRepository, times(1)).deleteById(blocId);
-    }
-
-    @Test
-    void testRetrieveBloc() {
-        Long blocId = 1L;
-        Bloc bloc = new Bloc(blocId, "Bloc A", 1000L, null, new HashSet<>());
-
-        when(blocRepository.findById(blocId)).thenReturn(Optional.of(bloc));
-
-        Bloc result = blocService.retrieveBloc(blocId);
+        Contrat result = contratService.retrieveContrat(contratId);
 
         assertNotNull(result);
-        assertEquals(blocId, result.getIdBloc());
-        verify(blocRepository, times(1)).findById(blocId);
+        assertEquals(contratId, result.getIdContrat());
+        verify(contratRepository, times(1)).findById(contratId);
     }
 
+    @Test
+    void testRemoveContrat() {
+        Integer contratId = 1;
+        Contrat contrat = new Contrat(contratId, "Contrat A", new Etudiant(), null, null);
+        when(contratRepository.findById(contratId)).thenReturn(Optional.of(contrat));
+
+        contratService.removeContrat(contratId);
+
+        verify(contratRepository, times(1)).delete(contrat);
+    }
+
+    @Test
+    void testAffectContratToEtudiant() {
+        Integer contratId = 1;
+        String nomE = "Nom";
+        String prenomE = "Prenom";
+        Etudiant etudiant = new Etudiant();
+        Contrat contrat = new Contrat(contratId, "Contrat A", etudiant, null, null);
+
+        when(etudiantRepository.findByNomEAndPrenomE(nomE, prenomE)).thenReturn(etudiant);
+        when(contratRepository.findByIdContrat(contratId)).thenReturn(contrat);
+
+        Contrat result = contratService.affectContratToEtudiant(contratId, nomE, prenomE);
+
+        assertNotNull(result);
+        verify(etudiantRepository, times(1)).findByNomEAndPrenomE(nomE, prenomE);
+        verify(contratRepository, times(1)).findByIdContrat(contratId);
+        verify(contratRepository, times(1)).save(contrat);
+    }
 
 }
