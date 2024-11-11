@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   spring_app:
-    image: ghassenmassaoud/ghassenmassaoud_5arctic3_g2_unihub:latest
+    image: abidiahlem/ahlemabidi_g6_kaddem:latest
     restart: unless-stopped
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kaddem_db?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
